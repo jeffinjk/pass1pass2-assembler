@@ -4,25 +4,43 @@ const FileUpload = ({ onFilesSelected }) => {
     const [inputFile, setInputFile] = useState(null);
     const [optabFile, setOptabFile] = useState(null);
 
-    const handleInputFileChange = (event) => {
+    const handleInputChange = (event) => {
         setInputFile(event.target.files[0]);
     };
 
-    const handleOptabFileChange = (event) => {
+    const handleOptabChange = (event) => {
         setOptabFile(event.target.files[0]);
     };
 
-    const handleSubmit = (event) => {
-        event.preventDefault();
-        onFilesSelected(inputFile, optabFile);
+    const handleUpload = () => {
+        if (inputFile && optabFile) {
+            onFilesSelected(inputFile, optabFile);
+        } else {
+            alert("Please select both input and optab files.");
+        }
     };
 
     return (
-        <form onSubmit={handleSubmit}>
-            <input type="file" accept=".txt" onChange={handleInputFileChange} />
-            <input type="file" accept=".txt" onChange={handleOptabFileChange} />
-            <button type="submit">Upload</button>
-        </form>
+        <div>
+            <h2>Upload Files</h2>
+            <div>
+                <input
+                    type="file"
+                    accept=".txt"
+                    onChange={handleInputChange}
+                />
+                <label>Input File</label>
+            </div>
+            <div>
+                <input
+                    type="file"
+                    accept=".txt"
+                    onChange={handleOptabChange}
+                />
+                <label>Optab File</label>
+            </div>
+            <button onClick={handleUpload}>Upload</button>
+        </div>
     );
 };
 
