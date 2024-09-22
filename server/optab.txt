@@ -1,0 +1,6 @@
+ADD     18
+SUB     1C
+MULT    20
+DIV     24
+LOAD    00
+STORE   0C

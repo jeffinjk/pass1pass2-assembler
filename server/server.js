@@ -30,67 +30,56 @@ app.post('/assemble', (req, res) => {
 });
 
 function assembleFiles() {
-  let output = '';
-  let symtab = {};
-  let locctr = 0;
-  let start = 0;
-
-  // Read the intermediate file for pass 1
+  const inputLines = fs.readFileSync('input.txt', 'utf8').split('\n');
   const intermediateLines = fs.readFileSync('intermediate.txt', 'utf8').split('\n');
+  const optabLines = fs.readFileSync('optab.txt', 'utf8').split('\n');
+  const symtabLines = fs.readFileSync('symtab.txt', 'utf8').split('\n');
 
-  intermediateLines.forEach((line) => {
-    const parts = line.trim().split(/\s+/);
-    if (parts.length < 3) return; // Skip empty or invalid lines
+  let assembledOutput = '';
 
-    const [label, opcode, operand] = parts;
+  // Example assembly logic (replace with your actual logic)
+  
+  // Process intermediate lines and generate symbol table
+  const symbols = {};
+  intermediateLines.forEach(line => {
+    if (line.trim()) {
+      const parts = line.split(/\s+/); // Split by whitespace
+      const label = parts[0];
+      const opcode = parts[1];
 
-    // Handle START directive
-    if (opcode === 'START') {
-      start = parseInt(operand, 10);
-      locctr = start;
-      output += `${line}\n`;
-      return;
-    }
-
-    // Handle END directive
-    if (opcode === 'END') {
-      output += `${locctr}\t${label}\t${opcode}\t${operand}\n`;
-      return;
-    }
-
-    // Record the symbol in the symbol table if label is not empty
-    if (label !== '**') {
-      symtab[label] = locctr;
-    }
-
-    // Increment locctr based on opcode type
-    if (opcode === 'WORD') {
-      locctr += 3;
-    } else if (opcode === 'RESW') {
-      locctr += 3 * parseInt(operand, 10);
-    } else if (opcode === 'BYTE') {
-      locctr += 1; // Assuming each BYTE is 1
-    } else if (opcode === 'RESB') {
-      locctr += parseInt(operand, 10);
-    } else {
-      // Look for opcode in the optab
-      const optabLines = fs.readFileSync('optab.txt', 'utf8').split('\n');
-      for (let i = 0; i < optabLines.length; i++) {
-        const [code, mnemonic] = optabLines[i].trim().split(/\s+/);
-        if (opcode === code) {
-          locctr += 3; // Standard instruction length
-          break;
-        }
+      // Store symbol if it is a label
+      if (label && opcode) {
+        symbols[label] = { address: assembledOutput.length, opcode }; // Simple address assignment
+        assembledOutput += `${label} ${opcode}\n`;
       }
     }
-
-    // Write to output file for pass 1
-    output += `${locctr}\t${label}\t${opcode}\t${operand}\n`;
   });
 
-  // Pass 2 logic would go here - not fully implemented as it requires more specific rules
+  // Process opcode table
+  optabLines.forEach(line => {
+    if (line.trim()) {
+      const parts = line.split(/\s+/);
+      const mnemonic = parts[0];
+      const code = parts[1];
 
-  return output;
+      // Use mnemonic to replace in assembled output if needed
+      assembledOutput = assembledOutput.replace(new RegExp(mnemonic, 'g'), code);
+    }
+  });
+
+  // Process symbol table
+  symtabLines.forEach(line => {
+    if (line.trim()) {
+      const parts = line.split(/\s+/);
+      const label = parts[0];
+      const address = parts[1];
+
+      // Include labels in the output for reference
+      assembledOutput += `Label: ${label} Address: ${address}\n`;
+    }
+  });
+
+  return assembledOutput;
 }
 
 app.listen(PORT, () => {
