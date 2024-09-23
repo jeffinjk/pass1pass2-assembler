@@ -101,6 +101,89 @@ def pass_one():
     fp5.close()
 
 
+def pass_two():
+    # Open necessary files
+    fp1 = open('intermediate.txt', 'r')
+    fp2 = open('optab.txt', 'r')
+    fp3 = open('symtab.txt', 'r')
+    fp4 = open('objectcode.txt', 'w')
+    
+    symtab = {}
+    
+    # Read the symbol table into a dictionary
+    for line in fp3:
+        parts = line.strip().split()
+        if len(parts) == 2:
+            symtab[parts[0]] = parts[1]
+
+    # Read intermediate file line by line
+    for line in fp1:
+        line = line.strip()
+        if not line:  # Ignore empty lines
+            continue
+
+        parts = line.split()
+        
+        if len(parts) == 4:  # format: locctr label opcode operand
+            locctr, label, opcode, operand = parts
+        elif len(parts) == 3:  # format: locctr ** opcode operand
+            locctr, opcode, operand = parts
+            label = "**"
+        else:
+            print(f"Error in format for line: {line}")
+            continue
+
+        # Lookup opcode in optab
+        fp2.seek(0)
+        machine_code = ""
+        found_opcode = False
+        for optab_line in fp2:
+            optab_parts = optab_line.strip().split()
+            if len(optab_parts) == 2 and opcode == optab_parts[0]:
+                machine_code = optab_parts[1]
+                found_opcode = True
+                break
+
+        if found_opcode:
+            # If operand is a symbol, fetch its address from symtab
+            if operand in symtab:
+                machine_code += symtab[operand]
+            else:
+                machine_code += "0000"  # Undefined symbol or no operand
+
+        elif opcode == "WORD":
+            # WORD stores a 3-byte constant
+            machine_code = f"{int(operand):06X}"
+
+        elif opcode == "BYTE":
+            # BYTE can be either a character constant (C'EOF') or hex constant (X'F1')
+            if operand.startswith("C'") and operand.endswith("'"):
+                characters = operand[2:-1]
+                machine_code = ''.join(f"{ord(c):02X}" for c in characters)
+            elif operand.startswith("X'") and operand.endswith("'"):
+                machine_code = operand[2:-1]  # Just take the hex digits as machine code
+
+        elif opcode == "RESW" or opcode == "RESB":
+            # RESW or RESB does not produce machine code, so leave blank
+            machine_code = ""
+
+        else:
+            print(f"Undefined opcode: {opcode}")
+            continue
+
+        # Write machine code to object file
+        if machine_code:
+            fp4.write(f"{locctr}\t{machine_code}\n")
+
+    # Close all files
+    fp1.close()
+    fp2.close()
+    fp3.close()
+    fp4.close()
+
+    print("\nPass 2 completed. Object code generated in 'objectcode.txt'.")
+
+
 def display_pass1_output():
     with open('input.txt', 'r') as fp1:
         print("\nThe contents of Input Table:\n")
@@ -115,6 +198,14 @@ def display_pass1_output():
         print(fp3.read())
 
 
+def display_pass2_output():
+    with open('objectcode.txt', 'r') as fp4:
+        print("\nThe contents of Object Code Table:\n")
+        print(fp4.read())
+
+
 if __name__ == "__main__":
-    pass_one()
-    display_pass1_output()
+    pass_one()              # Run Pass 1
+    display_pass1_output()   # Display results of Pass 1
+    pass_two()               # Run Pass 2
+    display_pass2_output()   # Display results of Pass 2
