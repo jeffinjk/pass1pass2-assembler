@@ -1,0 +1,17 @@
+pass1pass2-assembler/
+│
+├── public/
+│   └── index.html
+│
+├── src/
+│   ├── components/
+│   │   ├── UploadFiles.js   # For file uploads
+│   │   ├── PassOneResult.js # Displays Pass 1 output
+│   │   └── PassTwoResult.js # Displays Pass 2 output
+│   ├── App.js               # Main App component
+│   └── index.js             # Entry point
+│
+├── server/
+│   ├── pass1pass2.py        # Your Python program
+│   └── server.js            # Node.js server (optional for handling requests)
+└── package.json
