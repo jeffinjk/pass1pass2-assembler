@@ -204,6 +204,14 @@ def display_pass2_output():
         print(fp4.read())
 
 
+def read_output(file_path):
+    try:
+        with open(file_path, 'r') as file:
+            return file.read()
+    except FileNotFoundError:
+        return "File not found."
+
+
 if __name__ == "__main__":
     pass_one()              # Run Pass 1
     display_pass1_output()   # Display results of Pass 1

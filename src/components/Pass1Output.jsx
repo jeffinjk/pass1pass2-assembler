@@ -11,7 +11,7 @@ const Pass1Output = () => {
 
   return (
     <div>
-      <h2>Pass 1 Output</h2>
+      <h2>Pass 1 Output (Intermediate Code)</h2>
       <pre>{pass1Output}</pre>
     </div>
   );

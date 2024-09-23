@@ -11,7 +11,7 @@ const Pass2Output = () => {
 
   return (
     <div>
-      <h2>Pass 2 Output</h2>
+      <h2>Pass 2 Output (Object Code)</h2>
       <pre>{pass2Output}</pre>
     </div>
   );
