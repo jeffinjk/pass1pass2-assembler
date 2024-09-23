@@ -1,90 +1,113 @@
-import React, { useState } from 'react';
-import FileUpload from './FileUpload';
+import React, { useState, useEffect } from 'react';
 
 const App = () => {
-    const [pass1Output, setPass1Output] = useState('');
-    const [optabContent, setOptabContent] = useState('');
+    const [inputTable, setInputTable] = useState('');
+    const [intermediateTable, setIntermediateTable] = useState('');
+    const [symbolTable, setSymbolTable] = useState('');
+    const [length, setLength] = useState('');
 
-    const handleFilesSelected = (inputFile, optabFile) => {
-        const reader1 = new FileReader();
-        const reader2 = new FileReader();
+    const passOne = async () => {
+        const inputFile = 'input.txt';  // Adjust according to your environment
+        const optabFile = 'optab.txt';
+        const symtabFile = 'symtab.txt';
+        const intermediateFile = 'intermediate.txt';
+        const lengthFile = 'length.txt';
 
-        reader1.onload = (event) => {
-            const inputContent = event.target.result;
-            console.log("Input File Content:", inputContent);
-            
-            const output = processPass1(inputContent, optabContent);
-            setPass1Output(output.intermediateOutput);
-            console.log("Symbol Table:", output.symbolTable);
-        };
+        const inputData = await fetch(inputFile).then(res => res.text());
+        const optabData = await fetch(optabFile).then(res => res.text());
 
-        reader2.onload = (event) => {
-            const optabContent = event.target.result;
-            console.log("Optab File Content:", optabContent);
-            setOptabContent(optabContent);
-        };
+        const inputLines = inputData.split('\n').map(line => line.trim()).filter(Boolean);
+        const optabLines = optabData.split('\n').map(line => line.trim());
 
-        if (inputFile) {
-            reader1.readAsText(inputFile);
-        }
-        if (optabFile) {
-            reader2.readAsText(optabFile);
-        }
-    };
+        let locctr = 0, start = 0;
+        let outputIntermediate = '';
+        let outputSymtab = '';
 
-    const processPass1 = (inputContent, optabContent) => {
-        const inputLines = inputContent.trim().split('\n');
-        const optabLines = optabContent.trim().split('\n');
+        for (let line of inputLines) {
+            const parts = line.split(/\s+/);
+            let label = '**', opcode = '', operand = '';
 
-        let locctr = 0;
-        let start = 0;
-        let symbolTable = {};
-        let intermediateOutput = [];
+            if (parts.length === 3) {
+                label = parts[0];
+                opcode = parts[1];
+                operand = parts[2];
+            } else if (parts.length === 2) {
+                opcode = parts[0];
+                operand = parts[1];
+            } else if (parts.length === 1) {
+                opcode = parts[0];
+            }
 
-        inputLines.forEach((line) => {
-            const [label, opcode, operand] = line.split(/\s+/);
-            
             if (opcode === "START") {
-                start = parseInt(operand, 10);
+                start = parseInt(operand, 16);
                 locctr = start;
-                intermediateOutput.push(`\t${label}\t${opcode}\t${operand}`);
-            } else if (opcode === "END") {
-                intermediateOutput.push(`${locctr}\t${label}\t${opcode}\t${operand}`);
-                return; // Stop processing at END
-            } else {
-                intermediateOutput.push(`${locctr}\t${label}\t${opcode}\t${operand}`);
-                if (label && label !== '**') {
-                    symbolTable[label] = locctr;
-                }
+                outputIntermediate += `\t${label}\t${opcode}\t${operand}\n`;
+                continue;
+            }
 
-                // Update locctr based on opcode
-                const optabEntry = optabLines.find(optabLine => optabLine.startsWith(opcode));
-                if (optabEntry) {
-                    locctr += 3; // Assume each opcode takes 3 bytes
-                } else if (opcode === "WORD") {
+            outputIntermediate += `${locctr.toString(16).toUpperCase()}\t${label}\t${opcode}\t${operand}\n`;
+
+            if (label !== '**' && label.trim()) {
+                outputSymtab += `${label}\t${locctr.toString(16).toUpperCase()}\n`;
+            }
+
+            let foundOpcode = false;
+
+            for (let optabLine of optabLines) {
+                const [code] = optabLine.split(/\s+/);
+                if (opcode === code) {
                     locctr += 3;
-                } else if (opcode === "RESW") {
-                    locctr += 3 * parseInt(operand, 10);
-                } else if (opcode === "BYTE") {
-                    locctr += 1; // Adjust this as needed
-                } else if (opcode === "RESB") {
-                    locctr += parseInt(operand, 10);
+                    foundOpcode = true;
+                    break;
                 }
             }
-        });
 
-        return {
-            symbolTable,
-            intermediateOutput: intermediateOutput.join('\n'),
-        };
+            if (!foundOpcode) {
+                switch (opcode) {
+                    case "WORD":
+                        locctr += 3;
+                        break;
+                    case "RESW":
+                        locctr += 3 * parseInt(operand);
+                        break;
+                    case "BYTE":
+                        locctr += 1;
+                        break;
+                    case "RESB":
+                        locctr += parseInt(operand);
+                        break;
+                }
+            }
+        }
+
+        outputIntermediate += `${locctr.toString(16).toUpperCase()}\tEND\n`;
+
+        const lengthValue = locctr - start;
+        setLength(lengthValue.toString(16).toUpperCase());
+        setIntermediateTable(outputIntermediate);
+        setSymbolTable(outputSymtab);
+
+        // Save to files (in a Node.js environment, you would write to files)
+        console.log('Intermediate Table:', outputIntermediate);
+        console.log('Symbol Table:', outputSymtab);
+        console.log('Program Length:', lengthValue.toString(16).toUpperCase());
     };
+
+    useEffect(() => {
+        passOne();
+    }, []);
 
     return (
         <div>
-            <h1>Two Pass Assembler</h1>
-            <FileUpload onFilesSelected={handleFilesSelected} />
-            <h2>Pass 1 Output:</h2>
-            <pre>{pass1Output}</pre>
+            <h1>Pass 1 Assembler Output</h1>
+            <h2>Input Table</h2>
+            <pre>{inputTable}</pre>
+            <h2>Intermediate Table</h2>
+            <pre>{intermediateTable}</pre>
+            <h2>Symbol Table</h2>
+            <pre>{symbolTable}</pre>
+            <h2>Program Length</h2>
+            <p>{length}</p>
         </div>
     );
 };
