@@ -1,5 +1,5 @@
 import React from 'react';
-import { BrowserRouter as Router, Route, Link } from 'react-router-dom';
+import { BrowserRouter as Router, Routes, Route, Link } from 'react-router-dom';
 import UploadFiles from './components/UploadFiles';
 import Pass1Output from './components/Pass1Output';
 import Pass2Output from './components/Pass2Output';
@@ -17,10 +17,12 @@ const App = () => {
         </ul>
       </nav>
 
-      <Route path="/" exact component={UploadFiles} />
-      <Route path="/pass1" component={Pass1Output} />
-      <Route path="/pass2" component={Pass2Output} />
-      <Route path="/symtab" component={SymtabOutput} />
+      <Routes>
+        <Route path="/" element={<UploadFiles />} />
+        <Route path="/pass1" element={<Pass1Output />} />
+        <Route path="/pass2" element={<Pass2Output />} />
+        <Route path="/symtab" element={<SymtabOutput />} />
+      </Routes>
     </Router>
   );
 };
