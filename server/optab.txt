@@ -1,7 +1,6 @@
-COPY    03
-START   01
-LDA     00
 ADD     18
 SUB     1C
-STA     0C
-END     02
+MULT    20
+DIV     24
+LOAD    00
+STORE   0C

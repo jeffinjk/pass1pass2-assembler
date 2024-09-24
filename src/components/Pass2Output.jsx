@@ -10,9 +10,11 @@ const Pass2Output = () => {
   }, []);
 
   return (
-    <div>
-      <h2>Pass 2 Output (Object Code)</h2>
-      <pre>{pass2Output}</pre>
+    <div className="container mx-auto p-6">
+      <h2 className="text-3xl font-semibold mb-4 text-gray-800">Pass 2 Output (Object Code)</h2>
+      <div className="bg-white shadow-md rounded-lg p-5 border border-gray-200">
+        <pre className="whitespace-pre-wrap text-gray-700 font-mono">{pass2Output}</pre>
+      </div>
     </div>
   );
 };

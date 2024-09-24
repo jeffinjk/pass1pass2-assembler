@@ -17,19 +17,29 @@ const UploadFiles = () => {
     });
   };
 
+  
   return (
     <form onSubmit={handleSubmit}>
-      <label>
+      <label className="block mb-2">
         Input File:
-        <input type="file" onChange={(e) => setInputFile(e.target.files[0])} />
+        <input
+          type="file"
+          className="mt-1 block"
+          onChange={(e) => setInputFile(e.target.files[0])}
+        />
       </label>
-      <label>
+      <label className="block mb-2">
         OPTAB File:
-        <input type="file" onChange={(e) => setOptabFile(e.target.files[0])} />
+        <input
+          type="file"
+          className="mt-1 block"
+          onChange={(e) => setOptabFile(e.target.files[0])}
+        />
       </label>
-      <button type="submit">Submit Files</button>
+      <button type="submit" className="bg-blue-500 text-white px-4 py-2 rounded">
+        Submit Files
+      </button>
     </form>
   );
 };
-
 export default UploadFiles;

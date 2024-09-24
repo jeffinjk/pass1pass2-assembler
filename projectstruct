@@ -5,13 +5,15 @@ pass1pass2-assembler/
 │
 ├── src/
 │   ├── components/
-│   │   ├── UploadFiles.js   # For file uploads
-│   │   ├── PassOneResult.js # Displays Pass 1 output
-│   │   └── PassTwoResult.js # Displays Pass 2 output
-│   ├── App.js               # Main App component
+│   │   ├── UploadFiles.jsx   # For file uploads
+│   │   ├── PassOneResult.jsx # Displays Pass 1 output
+│   │   └── PassTwoResult.jsx
+│   │   └──Symtaboutput.jsx
+│   ├── App.jsx               # Main App component
 │   └── index.js             # Entry point
 │
 ├── server/
 │   ├── pass1pass2.py        # Your Python program
-│   └── server.js            # Node.js server (optional for handling requests)
+│   └── server.js   
+│   └──app.py         # Node.js server (optional for handling requests)
 └── package.json

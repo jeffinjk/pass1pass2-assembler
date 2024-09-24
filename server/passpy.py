@@ -25,6 +25,7 @@ def pass_one():
         print(f"Error: Invalid format in input file. Line: {line}")
         return
 
+    # START directive handling
     if opcode == "START":
         start = int(operand, 16)  # Treat start as a hex value
         locctr = start
@@ -39,42 +40,46 @@ def pass_one():
         elif len(parts) == 1:
             opcode = parts[0]
             label, operand = "**", "**"
-        else:
-            locctr = 0
+    else:
+        locctr = 0
 
+    # Pass 1 processing
     while opcode != "END":
-        # Write to intermediate file
+        # Write locctr and line to intermediate file
         fp4.write(f"{hex(locctr)[2:].upper()}\t{label}\t{opcode}\t{operand}\n")
 
-        # Add label to symbol table only if it is not "**"
-        if label != "**" and label.strip():  # Check if label is not empty or just whitespace
+        # Add label to symbol table if it's not empty or "**"
+        if label != "**" and label.strip():
             fp3.write(f"{label}\t{hex(locctr)[2:].upper()}\n")
 
-        # Check for opcode in optab
+        # Reset optab file pointer to search for opcode
         fp2.seek(0)
         code = mnemonic = ""
         found_opcode = False
+
         for line in fp2:
             code, mnemonic = line.strip().split()
             if opcode == code:
-                locctr += 3  # Increment by 3 for instructions
+                locctr += 3  # Instructions occupy 3 bytes
                 found_opcode = True
                 break
 
-        # Check for other opcodes
         if not found_opcode:
             if opcode == "WORD":
                 locctr += 3
             elif opcode == "RESW":
                 locctr += 3 * int(operand)  # RESW reserves words (3 bytes each)
             elif opcode == "BYTE":
-                locctr += 1  # Increment by 1 for BYTE
+                if operand.startswith("C'"):
+                    locctr += len(operand) - 3  # Each character is 1 byte
+                elif operand.startswith("X'"):
+                    locctr += (len(operand) - 3) // 2  # Each pair of hex digits is 1 byte
             elif opcode == "RESB":
                 locctr += int(operand)  # RESB reserves bytes
 
-        # Read next line from input
+        # Read the next line from input
         line = fp1.readline().strip()
-        if line:  # Ensure the line is not empty
+        if line:
             parts = line.split()
             if len(parts) == 3:
                 label, opcode, operand = parts
@@ -85,7 +90,7 @@ def pass_one():
                 opcode = parts[0]
                 label, operand = "**", "**"
 
-    # Write final line to intermediate file
+    # Write final END line to intermediate file
     fp4.write(f"{hex(locctr)[2:].upper()}\t{label}\t{opcode}\t{operand}\n")
 
     # Calculate and save program length
@@ -93,12 +98,13 @@ def pass_one():
     fp5.write(f"{hex(length)[2:].upper()}\n")
     print(f"\nThe length of the code: {hex(length)[2:].upper()}\n")
 
-    # Close files
+    # Close all files
     fp1.close()
     fp2.close()
     fp3.close()
     fp4.close()
     fp5.close()
+
 
 
 def pass_two():
@@ -107,9 +113,9 @@ def pass_two():
     fp2 = open('optab.txt', 'r')
     fp3 = open('symtab.txt', 'r')
     fp4 = open('objectcode.txt', 'w')
-    
+
     symtab = {}
-    
+
     # Read the symbol table into a dictionary
     for line in fp3:
         parts = line.strip().split()
@@ -123,7 +129,7 @@ def pass_two():
             continue
 
         parts = line.split()
-        
+
         if len(parts) == 4:  # format: locctr label opcode operand
             locctr, label, opcode, operand = parts
         elif len(parts) == 3:  # format: locctr ** opcode operand
@@ -135,8 +141,8 @@ def pass_two():
 
         # Lookup opcode in optab
         fp2.seek(0)
-        machine_code = ""
         found_opcode = False
+        machine_code = ""
         for optab_line in fp2:
             optab_parts = optab_line.strip().split()
             if len(optab_parts) == 2 and opcode == optab_parts[0]:
@@ -158,8 +164,7 @@ def pass_two():
         elif opcode == "BYTE":
             # BYTE can be either a character constant (C'EOF') or hex constant (X'F1')
             if operand.startswith("C'") and operand.endswith("'"):
-                characters = operand[2:-1]
-                machine_code = ''.join(f"{ord(c):02X}" for c in characters)
+                machine_code = ''.join(f"{ord(c):02X}" for c in operand[2:-1])
             elif operand.startswith("X'") and operand.endswith("'"):
                 machine_code = operand[2:-1]  # Just take the hex digits as machine code
 
