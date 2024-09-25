@@ -10,36 +10,43 @@ const UploadFiles = () => {
     formData.append('inputFile', inputFile);
     formData.append('optabFile', optabFile);
 
-    // Send data to the backend
     await fetch('http://localhost:5000/upload', {
       method: 'POST',
       body: formData,
     });
   };
 
-  
   return (
-    <form onSubmit={handleSubmit}>
-      <label className="block mb-2">
-        Input File:
-        <input
-          type="file"
-          className="mt-1 block"
-          onChange={(e) => setInputFile(e.target.files[0])}
-        />
-      </label>
-      <label className="block mb-2">
-        OPTAB File:
-        <input
-          type="file"
-          className="mt-1 block"
-          onChange={(e) => setOptabFile(e.target.files[0])}
-        />
-      </label>
-      <button type="submit" className="bg-blue-500 text-white px-4 py-2 rounded">
-        Submit Files
-      </button>
-    </form>
+    <div className="flex items-center justify-center h-screen">
+      <form 
+        onSubmit={handleSubmit} 
+        className="bg-navy-blue shadow-lg p-8 rounded-md"
+      >
+        <div className="mb-4">
+          <label className="block text-white">Input File:</label>
+          <input 
+            type="file" 
+            onChange={(e) => setInputFile(e.target.files[0])} 
+            className="text-white bg-dark-blue border-none focus:ring-2 focus:ring-gray-500"
+          />
+        </div>
+        <div className="mb-4">
+          <label className="block text-white">OPTAB File:</label>
+          <input 
+            type="file" 
+            onChange={(e) => setOptabFile(e.target.files[0])} 
+            className="text-white bg-dark-blue border-none focus:ring-2 focus:ring-gray-500"
+          />
+        </div>
+        <button 
+          type="submit" 
+          className="bg-dark-violet text-white px-4 py-2 rounded-md hover:bg-gray-700"
+        >
+          Submit Files
+        </button>
+      </form>
+    </div>
   );
 };
+
 export default UploadFiles;

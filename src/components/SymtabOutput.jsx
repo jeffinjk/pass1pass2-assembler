@@ -10,11 +10,9 @@ const SymtabOutput = () => {
   }, []);
 
   return (
-    <div className="container mx-auto p-6">
-      <h2 className="text-3xl font-semibold mb-4 text-gray-800">Symbol Table</h2>
-      <div className="bg-white shadow-md rounded-lg p-5 border border-gray-200">
-        <pre className="whitespace-pre-wrap text-gray-700 font-mono">{symtabOutput}</pre>
-      </div>
+    <div className="bg-white p-6 rounded-lg shadow-md max-w-3xl mx-auto">
+      <h2 className="text-2xl font-bold mb-4 text-center">Symbol Table</h2>
+      <pre className="bg-gray-100 p-4 rounded-md overflow-auto">{symtabOutput}</pre>
     </div>
   );
 };
