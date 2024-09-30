@@ -48,12 +48,12 @@ This project implements a two-pass assembler using React for the frontend and Fl
 6. Start the backend server:
    If using Flask:
 
-       ```bash
+       
        python app.py
   If using Express:
 
-    ```bash
-    node server.js
+    
+       node server.js
 Start the React application:
 
     npm start
