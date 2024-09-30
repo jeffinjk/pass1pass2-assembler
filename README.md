@@ -59,7 +59,8 @@ Start the React application:
     npm start
 Open your browser and go to http://localhost:3000 to access the application.
 
-Usage
-Navigate to the Upload Files page.
-Upload your input.txt and optab.txt files.
-After uploading, view the results for Pass 1, Pass 2, and the Symbol Table in their respective pages.
+## Usage
+
+1. Navigate to the Upload Files page.
+2. Upload your `input.txt` and `optab.txt` files.
+3. After uploading, view the results for Pass 1, Pass 2, and the Symbol Table in their respective pages.
