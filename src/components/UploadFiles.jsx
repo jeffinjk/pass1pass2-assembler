@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 
+
 const UploadFiles = () => {
   const [inputFile, setInputFile] = useState(null);
   const [optabFile, setOptabFile] = useState(null);
@@ -17,33 +18,17 @@ const UploadFiles = () => {
   };
 
   return (
-    <div className="flex items-center justify-center h-screen">
-      <form 
-        onSubmit={handleSubmit} 
-        className="bg-navy-blue shadow-lg p-8 rounded-md"
-      >
+    <div className="container">
+      <form onSubmit={handleSubmit}>
         <div className="mb-4">
-          <label className="block text-white">Input File:</label>
-          <input 
-            type="file" 
-            onChange={(e) => setInputFile(e.target.files[0])} 
-            className="text-white bg-dark-blue border-none focus:ring-2 focus:ring-gray-500"
-          />
+          <label>Input File:</label>
+          <input type="file" onChange={(e) => setInputFile(e.target.files[0])} />
         </div>
         <div className="mb-4">
-          <label className="block text-white">OPTAB File:</label>
-          <input 
-            type="file" 
-            onChange={(e) => setOptabFile(e.target.files[0])} 
-            className="text-white bg-dark-blue border-none focus:ring-2 focus:ring-gray-500"
-          />
+          <label>OPTAB File:</label>
+          <input type="file" onChange={(e) => setOptabFile(e.target.files[0])} />
         </div>
-        <button 
-          type="submit" 
-          className="bg-dark-violet text-white px-4 py-2 rounded-md hover:bg-gray-700"
-        >
-          Submit Files
-        </button>
+        <button type="submit">Submit Files</button>
       </form>
     </div>
   );

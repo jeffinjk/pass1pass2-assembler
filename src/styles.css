@@ -1,0 +1,139 @@
+/* styles.css */
+body {
+    margin: 0;
+    font-family: Arial, sans-serif;
+    background-color: #1a1a2e; /* Dark Blue Background */
+    color: white;
+    min-height: 100vh; /* Full height of the viewport */
+    display: flex;
+    flex-direction: column; /* Arrange children in a column */
+}
+
+.container {
+    flex: 1; /* Allow the container to grow and take available space */
+    width: 90%;
+    max-width: 1200px;
+    margin: 20px auto;
+    padding: 20px;
+    background-color: #333;
+    border-radius: 8px;
+    box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.5);
+}
+
+h2 {
+    text-align: center;
+    margin-bottom: 20px;
+    font-size: 1.5rem;
+}
+
+pre {
+    background-color: #f5f5f5;
+    color: #333;
+    padding: 15px;
+    border-radius: 8px;
+    white-space: pre-wrap;
+}
+
+form {
+    background-color: #2c2c54; /* Form Background */
+    padding: 20px;
+    border-radius: 8px;
+    box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.5);
+    max-width: 500px;
+    margin: auto;
+}
+
+form label {
+    display: block;
+    margin-bottom: 10px;
+    font-weight: bold;
+}
+
+form input[type="file"] {
+    background-color: #333;
+    color: white;
+    padding: 10px;
+    border: none;
+    margin-bottom: 20px;
+}
+
+form button {
+    background-color: #6a0572; /* Dark Violet */
+    color: white;
+    padding: 10px 20px;
+    border: none;
+    border-radius: 8px;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+}
+
+form button:hover {
+    background-color: #444;
+}
+
+nav {
+    background-color: #6a0572; /* Dark Violet for Navigation Bar */
+    padding: 20px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+}
+
+nav ul {
+    list-style-type: none;
+    display: flex; /* Default to horizontal layout */
+    justify-content: center;
+    padding: 0;
+    margin: 0;
+}
+
+nav ul li {
+    margin: 0 15px;
+}
+
+nav ul li a {
+    color: white;
+    text-decoration: none;
+    font-size: 1.1rem;
+    font-weight: bold;
+    transition: color 0.3s ease;
+}
+
+nav ul li a:hover {
+    color: #f5f5f5; /* Light Gray on Hover */
+}
+
+footer {
+    background-color: #6a0572; /* Dark Violet for Footer */
+    padding: 20px 0;
+    width: 100%;
+}
+
+footer p {
+    margin: 0;
+    line-height: 1.5; /* Improve spacing between lines */
+    text-align: center; /* Center footer text */
+}
+
+/* Responsiveness */
+@media (max-width: 768px) {
+    .container {
+        width: 95%;
+        padding: 15px;
+    }
+
+    form {
+        width: 100%;
+    }
+
+    pre {
+        font-size: 0.85rem;
+    }
+
+    nav ul {
+        flex-direction: column; /* Change to vertical layout on small screens */
+        align-items: center; /* Center align items */
+    }
+
+    nav ul li {
+        margin: 10px 0; /* Add some margin for vertical spacing */
+    }
+}

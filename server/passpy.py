@@ -64,16 +64,14 @@ def pass_one():
                 found_opcode = True
                 break
 
+        # Handling directives when opcode is not found in optab
         if not found_opcode:
             if opcode == "WORD":
                 locctr += 3
             elif opcode == "RESW":
-                locctr += 3 * int(operand)  # RESW reserves words (3 bytes each)
+                locctr += (3 * int(operand))  # RESW reserves words (3 bytes each)
             elif opcode == "BYTE":
-                if operand.startswith("C'"):
-                    locctr += len(operand) - 3  # Each character is 1 byte
-                elif operand.startswith("X'"):
-                    locctr += (len(operand) - 3) // 2  # Each pair of hex digits is 1 byte
+                locctr += 1  # BYTE reserves 1 byte
             elif opcode == "RESB":
                 locctr += int(operand)  # RESB reserves bytes
 

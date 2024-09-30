@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
 
+
 const Pass1Output = () => {
   const [pass1Output, setPass1Output] = useState('');
 
@@ -10,13 +11,13 @@ const Pass1Output = () => {
   }, []);
 
   return (
-    <div className="container mx-auto p-6">
-      <h2 className="text-3xl font-semibold mb-4 text-gray-800">Pass 1 Output (Intermediate Code)</h2>
-      <div className="bg-white shadow-md rounded-lg p-5 border border-gray-200">
-        <pre className="whitespace-pre-wrap text-gray-700 font-mono">{pass1Output}</pre>
+    <div className="container">
+      <h2 className="heading">Pass 1 Output (Intermediate Code)</h2>
+      <div className="output-box">
+        <pre className="output-text">{pass1Output}</pre>
       </div>
     </div>
   );
 };
 
-export default Pass1Output; 
+export default Pass1Output;
