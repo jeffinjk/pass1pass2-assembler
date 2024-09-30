@@ -1,5 +1,11 @@
-LDA     00
 ADD     18
 SUB     1C
-STA     0C
-
+MUL     20
+DIV     24
+COMP    28
+J      3C
+JEQ    30
+JLT    38
+JSUB    48
+STL    14
+LDX    04
