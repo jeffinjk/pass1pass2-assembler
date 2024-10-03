@@ -4,7 +4,6 @@ import UploadFiles from './components/UploadFiles';
 import Pass1Output from './components/Pass1Output';
 import Pass2Output from './components/Pass2Output';
 import SymtabOutput from './components/SymtabOutput';
-import Footer from './components/Footer';
 
 import './styles.css';  // Import the CSS file
 
@@ -39,7 +38,6 @@ const App = () => {
         </Routes>
 
         {/* Footer */}
-        <Footer />
       </Router>
     </div>
   );
