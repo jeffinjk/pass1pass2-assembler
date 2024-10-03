@@ -1,70 +1,66 @@
-# Getting Started with Create React App
+# Pass 1 and Pass 2 Assembler
 
-This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
+This project implements a two-pass assembler using React for the frontend and Flask (or Express) for the backend. Users can upload assembly input files, and the application processes them to generate outputs for Pass 1 and Pass 2, including the Symbol Table.
 
-## Available Scripts
+## Features
 
-In the project directory, you can run:
+- Upload assembly input files (`input.txt` and `optab.txt`).
+- Display results for:
+  - Pass 1 (Intermediate Code)
+  - Pass 2 (Object Code)
+  - Symbol Table Output
+- Responsive UI with Tailwind CSS for styling.
+- File upload functionality with feedback on processing status.
 
-### `npm start`
+## Tech Stack
 
-Runs the app in the development mode.\
-Open [http://localhost:3000](http://localhost:3000) to view it in your browser.
+- **Frontend**: React, Tailwind CSS
+- **Backend**: Flask (or Express), Python
+- **Deployment**: Can be hosted on any platform supporting Flask/Express and React.
 
-The page will reload when you make changes.\
-You may also see any lint errors in the console.
+## Getting Started
 
-### `npm test`
+### Prerequisites
 
-Launches the test runner in the interactive watch mode.\
-See the section about [running tests](https://facebook.github.io/create-react-app/docs/running-tests) for more information.
+- Node.js
+- npm
+- Python 3.x
+- Flask (if using Flask backend)
+- Express (if using Express backend)
 
-### `npm run build`
+### Installation
 
-Builds the app for production to the `build` folder.\
-It correctly bundles React in production mode and optimizes the build for the best performance.
+1. Clone the repository:
+   ```bash
+   git clone https://github.com/jeffinjk/pass1pass2-assembler.git
+   cd pass1pass2-assembler
+2. Install the required Python packages:
+   ```bash
+   pip install flask flask-cors
+3. Navigate to the React app directory:
+   ```bash
+   cd ../client  # Assuming your React app is in a 'client' folder
+4. Install the required Node.js packages:
+   ```bash
+   npm install
+5. Running the Application
 
-The build is minified and the filenames include the hashes.\
-Your app is ready to be deployed!
+6. Start the backend server:
+   If using Flask:
 
-See the section about [deployment](https://facebook.github.io/create-react-app/docs/deployment) for more information.
+       
+       python app.py
+  If using Express:
 
-### `npm run eject`
+    
+       node server.js
+Start the React application:
 
-**Note: this is a one-way operation. Once you `eject`, you can't go back!**
+    npm start
+Open your browser and go to http://localhost:3000 to access the application.
 
-If you aren't satisfied with the build tool and configuration choices, you can `eject` at any time. This command will remove the single build dependency from your project.
+## Usage
 
-Instead, it will copy all the configuration files and the transitive dependencies (webpack, Babel, ESLint, etc) right into your project so you have full control over them. All of the commands except `eject` will still work, but they will point to the copied scripts so you can tweak them. At this point you're on your own.
-
-You don't have to ever use `eject`. The curated feature set is suitable for small and middle deployments, and you shouldn't feel obligated to use this feature. However we understand that this tool wouldn't be useful if you couldn't customize it when you are ready for it.
-
-## Learn More
-
-You can learn more in the [Create React App documentation](https://facebook.github.io/create-react-app/docs/getting-started).
-
-To learn React, check out the [React documentation](https://reactjs.org/).
-
-### Code Splitting
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/code-splitting](https://facebook.github.io/create-react-app/docs/code-splitting)
-
-### Analyzing the Bundle Size
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size](https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size)
-
-### Making a Progressive Web App
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app](https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app)
-
-### Advanced Configuration
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/advanced-configuration](https://facebook.github.io/create-react-app/docs/advanced-configuration)
-
-### Deployment
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/deployment](https://facebook.github.io/create-react-app/docs/deployment)
-
-### `npm run build` fails to minify
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify](https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify)
+1. Navigate to the Upload Files page.
+2. Upload your `input.txt` and `optab.txt` files.
+3. After uploading, view the results for Pass 1, Pass 2, and the Symbol Table in their respective pages.
