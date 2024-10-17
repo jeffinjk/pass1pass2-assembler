@@ -59,6 +59,13 @@ app.get('/symtab-output', (req, res) => {
   });
 });
 
+app.get('/record-output', (req, res) => {
+  fs.readFile(path.join(__dirname, 'record.txt'), 'utf8', (err, data) => {
+    if (err) return res.status(500).send(err);
+    res.send(data);
+  });
+});
+
 app.listen(5000, () => {
   console.log('Server started on http://localhost:5000');
 });

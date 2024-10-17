@@ -1,7 +1,7 @@
 from flask import Flask, request, jsonify
 from flask_cors import CORS
 import os
-from passpy import pass_one, pass_two, read_output
+from passpy import pass_one, pass_two
 
 app = Flask(__name__)
 CORS(app)  # Enable CORS for React app
@@ -17,6 +17,7 @@ def upload_files():
     symtab_file = open(os.path.join(UPLOAD_FOLDER, 'symtab.txt'), 'w')
     length_file = open(os.path.join(UPLOAD_FOLDER, 'length.txt'), 'w')
     objectcode_file = open(os.path.join(UPLOAD_FOLDER, 'objectcode.txt'), 'w')
+    record_file=open(os.path.join(UPLOAD_FOLDER,'record.txt'),'w')
 
     # Save uploaded files
     input_file.save(os.path.join(UPLOAD_FOLDER, 'input.txt'))
@@ -33,7 +34,8 @@ def upload_files():
     pass_two(os.path.join(UPLOAD_FOLDER, 'intermediate.txt'),
              os.path.join(UPLOAD_FOLDER, 'optab.txt'),
              os.path.join(UPLOAD_FOLDER, 'symtab.txt'),
-             os.path.join(UPLOAD_FOLDER, 'objectcode.txt'))
+             os.path.join(UPLOAD_FOLDER, 'objectcode.txt'),
+             os.path.join(UPLOAD_FOLDER,'record.txt'))
 
     return jsonify({"message": "Files processed successfully"}), 200
 
@@ -51,6 +53,19 @@ def get_pass2_output():
 def get_symtab_output():
     output = read_output(os.path.join(UPLOAD_FOLDER, 'symtab.txt'))
     return output, 200
+@app.route('/record-output', methods=['GET'])
+def get_record_output():
+    output = read_output(os.path.join(UPLOAD_FOLDER,'record.txt'))
+    return output, 200
+  
+
+def read_output(file_path):
+    try:
+        with open(file_path, 'r') as file:
+            output = file.read()
+        return output
+    except FileNotFoundError:
+        return "File not found."
 
 if __name__ == '__main__':
     app.run(debug=True)

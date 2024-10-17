@@ -257,9 +257,9 @@ def display_pass2_output():
         print("\nThe contents of Object Code File:\n")
         print(fp4.read())
 
-    with open('record.txt', 'r') as fp4:
+    with open('record.txt', 'r') as rec_file:
         print("\nThe contents of Record File:\n")
-        print(fp4.read())
+        print(rec_file.read())
 
 
 if __name__ == "__main__":
