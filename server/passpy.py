@@ -110,6 +110,7 @@ def pass_two():
     fp2 = open('optab.txt', 'r')
     fp3 = open('symtab.txt', 'r')
     fp4 = open('objectcode.txt', 'w')
+    fp5 = open('record.txt', 'w')
 
     symtab = {}
 
@@ -118,6 +119,8 @@ def pass_two():
         parts = line.strip().split()
         if len(parts) == 2:
             symtab[parts[0]] = parts[1]
+
+    records = []  # List to hold the locctr and generated machine code
 
     # Read intermediate file line by line
     for line in fp1:
@@ -173,69 +176,51 @@ def pass_two():
             print(f"Undefined opcode: {opcode}")
             continue
 
-        # Write machine code to object file
+        # Write machine code to object file if it exists
         if machine_code:
             fp4.write(f"{locctr}\t{machine_code}\n")
+            records.append((locctr, machine_code))
+
+    # Generate header, text, and end records
+    program_name = "COPY"  # Ensure it's a 6-character name
+    starting_address = "001000"  # Adjust as needed
+    length = sum(len(code) // 2 for _, code in records)  # Calculate length in bytes
+
+    # Write header record
+    header = f"H^{program_name}^{starting_address}^{length:06X}"
+    fp5.write(f"{header}\n")
+
+    # Prepare text records
+    current_loc = ""
+    current_code = ""
+    for locctr, code in records:
+        if current_loc == "":
+            current_loc = locctr
+            current_code = code
+        elif (int(locctr, 16) - int(current_loc, 16)) < 0x0F:  # If next locctr is within 15 bytes
+            current_code += code  # Append code
+        else:
+            fp5.write(f"T^{current_loc}^{len(current_code) // 2:02X}^{current_code}\n")
+            current_loc = locctr
+            current_code = code
+
+    # Don't forget to add the last text record if it exists
+    if current_code:
+        fp5.write(f"T^{current_loc}^{len(current_code) // 2:02X}^{current_code}\n")
+
+    # Write end record
+    end_record = f"E^{starting_address}"
+    fp5.write(f"{end_record}\n")
 
     # Close all files
     fp1.close()
     fp2.close()
     fp3.close()
     fp4.close()
+    fp5.close()
 
-    print("\nPass 2 completed. Object code generated in 'objectcode.txt'.")
+    print("\nPass 2 completed. Header, text, and end records generated in 'record.txt'.")
 
-
-def generate_object_code():
-    with open('objectcode.txt', 'r') as obj_file, \
-         open('record.txt', 'w') as rec_file:
-
-        records = []
-        program_name = "COPY"  # Ensure it's a 6-character name
-        starting_address = "001000"  # Adjust as needed
-        length = 0  # Initialize length to calculate dynamically
-
-        # Read object codes from the object code file
-        for line in obj_file:
-            parts = line.strip().split('\t')
-            if len(parts) == 2:
-                locctr, code = parts
-                records.append((locctr, code))
-                length += len(code) // 2  # Count length in bytes
-
-        # Add header record
-        header = f"H^{program_name}^{starting_address}^{length:06X}"  # Format length to hex, padded to 6 digits
-
-        # Prepare text records
-        current_loc = ""
-        current_code = ""
-        text_records = []
-        
-        for locctr, code in records:
-            if current_loc == "":
-                current_loc = locctr
-                current_code = code
-            elif (int(locctr, 16) - int(current_loc, 16)) < 0x0F:  # If next locctr is within 15 bytes
-                current_code += code  # Append code
-            else:
-                text_records.append(f"T^{current_loc}^{len(current_code)//2:02X}^{current_code}")  # 2 bytes for length
-                current_loc = locctr
-                current_code = code
-
-        # Don't forget to add the last text record if it exists
-        if current_code:
-            text_records.append(f"T^{current_loc}^{len(current_code)//2:02X}^{current_code}")
-
-        # Add end record
-        end_record = f"E^{starting_address}"
-
-        # Write to record file
-        rec_file.write(f"{header}\n")
-        for record in text_records:
-            rec_file.write(f"{record}\n")
-        rec_file.write(f"{end_record}\n")
-
-    print("\nFinal output generated in 'record.txt'.")
 
 
 def display_pass1_output():
@@ -257,14 +242,13 @@ def display_pass2_output():
         print("\nThe contents of Object Code File:\n")
         print(fp4.read())
 
-    with open('record.txt', 'r') as fp4:
+    with open('record.txt', 'r') as fp5:
         print("\nThe contents of Record File:\n")
-        print(fp4.read())
+        print(fp5.read())
 
 
 if __name__ == "__main__":
     pass_one()
     display_pass1_output()
     pass_two()
-    generate_object_code()
     display_pass2_output()

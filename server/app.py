@@ -55,8 +55,10 @@ def get_symtab_output():
     return output, 200
 @app.route('/record-output', methods=['GET'])
 def get_record_output():
-    output = read_output(os.path.join(UPLOAD_FOLDER,'record.txt'))
+    output = read_output(os.path.join(UPLOAD_FOLDER, 'record.txt'))
     return output, 200
+
+
   
 
 def read_output(file_path):

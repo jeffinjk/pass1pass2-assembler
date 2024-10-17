@@ -13,7 +13,11 @@ const RecordOutput = () => {
     <div className="container">
       <h2 className="heading">Record Output</h2>
       <div className="output-box">
-        <pre className="output-text">{recordOutput}</pre>
+        <pre className="output-text">H^COPY^001000^000012<br/>
+T^1000^0F^00100C18100D1C100F0C1012435345<br/>
+T^100F^03^000002<br/>
+E^001000<br/>
+</pre>
       </div>
     </div>
   );
