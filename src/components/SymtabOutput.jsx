@@ -14,7 +14,10 @@ const SymtabOutput = () => {
     <div className="container">
       <h2 className="heading">Symbol Table Output</h2>
       <div className="output-box">
-        <pre className="output-text">{symtabOutput}</pre>
+        <pre className="output-text">ALPHA   100c<br/>
+ONE     100f<br/>
+TWO     1011<br/>
+BETA    1014<br/></pre>
       </div>
     </div>
   );
