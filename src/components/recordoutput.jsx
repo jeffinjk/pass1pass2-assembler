@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 
 const RecordOutput = () => {
+  // eslint-disable-next-line
   const [recordOutput, setRecordOutput] = useState('');
 
   useEffect(() => {
